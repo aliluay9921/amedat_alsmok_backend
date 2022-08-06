@@ -14,15 +14,15 @@ class UserController extends Controller
         $request = $request->json()->all();
         $validator = Validator::make($request, [
             'password' => 'required',
-            "full_name" => 'required',
+            "user_name" => 'required',
         ], [
-            'full_name.required' => ' يرجى ادخال اسم المستخدم ',
+            'user_name.required' => ' يرجى ادخال اسم المستخدم ',
             'password.required' => 'يرجى ادخال كلمة المرور ',
         ]);
         if ($validator->fails()) {
             return $this->send_response(400, 'فشل عملية تسجيل الدخول', $validator->errors(), []);
         }
-        if (auth()->attempt(array('full_name' => $request['full_name'], 'password' => $request['password']))) {
+        if (auth()->attempt(array('user_name' => $request['user_name'], 'password' => $request['password']))) {
             $user = auth()->user();
             $token = $user->createToken('shop_managment')->accessToken;
             return $this->send_response(200, 'تم تسجيل الدخول بنجاح', [], $user, $token);

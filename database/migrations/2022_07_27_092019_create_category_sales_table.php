@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('place');
             $table->string('name_customer');
             $table->string('type');
+            $table->string('degree');
             $table->double('quantity');
             $table->integer('man_buliding'); // number of buliding man_buliding 
             $table->integer('workers'); // number of buliding workers 

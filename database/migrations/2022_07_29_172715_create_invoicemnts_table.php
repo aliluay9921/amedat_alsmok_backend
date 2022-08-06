@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string("driver_name");
             $table->string("car_number");
             $table->double("quantity_car");
-            $table->string("invoice_no")->default(1);
+            $table->integer("invoice_no")->default(1);
             $table->string('sequence')->default(1);
             $table->timestamps();
         });

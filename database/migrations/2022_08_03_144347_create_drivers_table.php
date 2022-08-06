@@ -13,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('drivers', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('full_name');
-            $table->string('user_name');
-            $table->integer('user_type');
-            $table->string('password');
-            $table->rememberToken();
+            $table->string("driver_name");
             $table->timestamps();
         });
     }
@@ -31,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('drivers');
     }
 };
