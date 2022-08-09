@@ -27,11 +27,8 @@ route::post("login", [UserController::class, "login"]);
 route::middleware("auth:api")->group(function () {
 
     route::get("get_sale", [salesCategoryController::class, 'getSale']);
-    route::get("get_sales_processing", [salesCategoryController::class, 'getSalesProcessing']);
-    route::get("get_sales_done", [salesCategoryController::class, 'getSalesDone']);
     route::get("get_invoicemnts", [InvoicmentController::class, 'getInvoicemnt']);
-    route::get("get_done_invoice", [salesCategoryController::class, 'getDoneInvoice']);
-
+    route::get("info_invoicemnt", [InvoicmentController::class, 'infoInvoicment']);
 
 
     route::post("add_to_done", [ProcessingController::class, 'addToDone']);

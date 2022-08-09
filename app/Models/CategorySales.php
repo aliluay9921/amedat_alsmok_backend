@@ -26,4 +26,9 @@ class CategorySales extends Model
     {
         return $this->belongsTo(User::class, 'employee_id');
     }
+
+    public function invoicements()
+    {
+        return $this->hasMany(Invoicemnt::class, 'sale_category_id');
+    }
 }

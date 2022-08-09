@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CategorySales;
 use App\Models\Invoicemnt;
 use App\Models\Processing;
 use App\Traits\Pagination;
 use App\Traits\SendResponse;
 use Illuminate\Http\Request;
+use App\Models\CategorySales;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 
 class InvoicmentController extends Controller
@@ -15,12 +16,35 @@ class InvoicmentController extends Controller
     use SendResponse, Pagination;
     public function getInvoicemnt()
     {
-        $get = Invoicemnt::select("*");
+        $invoicemnts = Invoicemnt::select("*");
+        if (isset($_GET['query'])) {
+            $invoicemnts->where(function ($q) {
+                $columns = Schema::getColumnListing('invoicemnts');
+                foreach ($columns as $column) {
+                    $q->orWhere($column, 'LIKE', '%' . $_GET['query'] . '%');
+                }
+            });
+        }
+        if (isset($_GET['filter'])) {
+            $filter = json_decode($_GET['filter']);
+            $invoicemnts->where($filter->name, $filter->value);
+            error_log($filter->name);
+        }
+        if (isset($_GET)) {
+            foreach ($_GET as $key => $value) {
+                if ($key == 'skip' || $key == 'limit' || $key == 'query' || $key = 'filter') {
+                    continue;
+                } else {
+                    $sort = $value == 'true' ? 'desc' : 'asc';
+                    $invoicemnts->orderBy($key,  $sort);
+                }
+            }
+        }
         if (!isset($_GET['skip']))
             $_GET['skip'] = 0;
         if (!isset($_GET['limit']))
-            $_GET['limit'] = 10000;
-        $res = $this->paging($get,  $_GET['skip'],  $_GET['limit']);
+            $_GET['limit'] = 10;
+        $res = $this->paging($invoicemnts->orderBy("created_at", "desc"),  $_GET['skip'],  $_GET['limit']);
         return $this->send_response(200, 'تم جلب الفواتير بنجاح', [], $res["model"], null, $res["count"]);
     }
     public function addInvoicemnt(Request $request)
@@ -51,6 +75,7 @@ class InvoicmentController extends Controller
             "employee_id" => auth()->user()->id,
             "driver_name" => $request["driver_name"],
             "car_number" => $request["car_number"],
+            "car_sequence" => $request["car_sequence"],
             "quantity_car" => $request["quantity_car"],
             'invoice_no' => $request['invoice_no'],
             'sequence' => $request['sequence'],
@@ -60,5 +85,15 @@ class InvoicmentController extends Controller
 
         $sale_category->update(['status' => 2]);  // to make sale category process done 
         return $this->send_response(200, 'تم اضافة فاتورة بنجاح', [], Invoicemnt::find($add_invoice->id));
+    }
+
+    public function infoInvoicment()
+    {
+        $get_invoice_no = Invoicemnt::count();
+        $data = [];
+        $data = [
+            "invoice_no" => $get_invoice_no,
+        ];
+        return $data;
     }
 }

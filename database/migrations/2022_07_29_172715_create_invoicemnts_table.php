@@ -19,6 +19,7 @@ return new class extends Migration
             $table->uuid("sale_category_id");
             $table->string("driver_name");
             $table->string("car_number");
+            $table->string("car_sequence");
             $table->double("quantity_car");
             $table->integer("invoice_no")->default(1);
             $table->string('sequence')->default(1);

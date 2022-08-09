@@ -13,6 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
+        // ini_set('memory_limit', 4096);
+
         Schema::create('category_sales', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('employee_id');
