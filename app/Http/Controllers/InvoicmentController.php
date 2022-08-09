@@ -86,14 +86,4 @@ class InvoicmentController extends Controller
         $sale_category->update(['status' => 2]);  // to make sale category process done 
         return $this->send_response(200, 'تم اضافة فاتورة بنجاح', [], Invoicemnt::find($add_invoice->id));
     }
-
-    public function infoInvoicment()
-    {
-        $get_invoice_no = Invoicemnt::count();
-        $data = [];
-        $data = [
-            "invoice_no" => $get_invoice_no,
-        ];
-        return $data;
-    }
 }

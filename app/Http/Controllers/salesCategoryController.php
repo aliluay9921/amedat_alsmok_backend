@@ -74,6 +74,10 @@ class salesCategoryController extends Controller
     public function getSale()
     {
         $saels = CategorySales::select("*");
+        // if (isset($_GET["proces_type"])) {
+        //     $saels = CategorySales::whereIn("proces_type", $_GET['proces_type']);
+        //     return $saels->get();
+        // }
         if (isset($_GET['query'])) {
             $saels->where(function ($q) {
                 $columns = Schema::getColumnListing('category_sales');
@@ -85,7 +89,6 @@ class salesCategoryController extends Controller
         if (isset($_GET['filter'])) {
             $filter = json_decode($_GET['filter']);
             $saels->where($filter->name, $filter->value);
-            error_log($filter->name);
         }
         if (isset($_GET)) {
             foreach ($_GET as $key => $value) {
@@ -111,7 +114,10 @@ class salesCategoryController extends Controller
     {
         $request = $request->json()->all();
         $validator = Validator::make($request, [
-            "sale_category_id" => 'required|exists:category_sales,id'
+            "sale_category_id" => 'required|exists:category_sales,id',
+            'proces_type' => 'required'
+        ], [
+            'proces_type.required' => 'لايمكنك الترحيل دون اختيار المعمل'
         ]);
         if ($validator->fails()) {
             return $this->send_response(400, 'خطأ في المدخلات', $validator->errors(), []);
@@ -120,7 +126,10 @@ class salesCategoryController extends Controller
         $auth = auth()->user();
         if ($auth->user_type == 1 || $auth->user_type == 0) {
             $sale_category = CategorySales::find($request["sale_category_id"]);
-            $sale_category->update(['status' => 1]);
+            $sale_category->update([
+                'status' => 1,
+                'proces_type' => $request['proces_type'],
+            ]);
             return $this->send_response(200, 'تم الترحيل الى المعمل', [], CategorySales::find($request["sale_category_id"]));
         } else {
             return $this->send_response(400, 'لاتمتلك الصلاحية للترحيل الى المعمل', [], []);

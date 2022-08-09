@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
   public function run()
   {
     User::create([
-      'full_name' => 'يوسف عبد الستار',
+      'full_name' => 'اورنس',
       'user_name' => 'admin@admin1',
       'user_type' => 0,
       'password' => bcrypt('admin1234'),
@@ -25,6 +25,18 @@ class UserSeeder extends Seeder
       'user_name' => 'admin2@admin',
       'user_type' => 1,
       'password' => bcrypt('admin@1234'),
+    ]);
+    User::create([
+      'full_name' => 'محمد كرار',
+      'user_name' => 'admin3@admin',
+      'user_type' => 1,
+      'password' => bcrypt('admin@12346'),
+    ]);
+    User::create([
+      'full_name' => 'يوسف عبد الستار',
+      'user_name' => 'admin4@admin',
+      'user_type' => 2,
+      'password' => bcrypt('admin12345'),
     ]);
   }
 }

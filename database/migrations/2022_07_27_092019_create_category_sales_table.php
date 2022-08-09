@@ -18,6 +18,7 @@ return new class extends Migration
         Schema::create('category_sales', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('employee_id');
+            $table->uuid("proces_type")->default(0); // 0 after create 1 to first process 2 to second process 3 firstAndsecond process
             $table->string('place');
             $table->string('name_customer');
             $table->string('type');

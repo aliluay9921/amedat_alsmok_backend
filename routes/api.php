@@ -27,19 +27,18 @@ route::post("login", [UserController::class, "login"]);
 route::middleware("auth:api")->group(function () {
 
     route::get("get_sale", [salesCategoryController::class, 'getSale']);
-    route::get("get_invoicemnts", [InvoicmentController::class, 'getInvoicemnt']);
-    route::get("info_invoicemnt", [InvoicmentController::class, 'infoInvoicment']);
 
+    route::middleware('saleCategoryAdmin')->group(function () {
+        route::post("add_sale", [salesCategoryController::class, 'addSale']);
+        route::put("update_sale_category", [salesCategoryController::class, 'updateSaleCategory']);
+        route::put("sending_to_processing", [salesCategoryController::class, 'sendingToProcessing']);
+        route::delete("delete_sale_category", [salesCategoryController::class, 'deleteSaleCategory']);
+    });
 
-    route::post("add_to_done", [ProcessingController::class, 'addToDone']);
-    route::post("add_sale", [salesCategoryController::class, 'addSale']);
-    route::post("add_invoicement", [InvoicmentController::class, 'addInvoicemnt']);
-
-
-    route::put("sending_to_processing", [salesCategoryController::class, 'sendingToProcessing']);
-    route::put("done_invoice", [salesCategoryController::class, 'doneInvoice']);
-    route::put("update_sale_category", [salesCategoryController::class, 'updateSaleCategory']);
-
-
-    route::delete("delete_sale_category", [salesCategoryController::class, 'deleteSaleCategory']);
+    route::middleware('processingAndAccountingAdmin')->group(function () {
+        route::get("get_invoicemnts", [InvoicmentController::class, 'getInvoicemnt']);
+        route::post("add_to_done", [ProcessingController::class, 'addToDone']);
+        route::post("add_invoicement", [InvoicmentController::class, 'addInvoicemnt']);
+        route::put("done_invoice", [salesCategoryController::class, 'doneInvoice']);
+    });
 });
