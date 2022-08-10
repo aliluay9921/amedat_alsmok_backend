@@ -14,28 +14,32 @@ class UserSeeder extends Seeder
    */
   public function run()
   {
+    // مبيعات
     User::create([
-      'full_name' => 'اورنس',
+      'full_name' => 'مبيعات',
       'user_name' => 'admin@admin1',
       'user_type' => 0,
       'password' => bcrypt('admin1234'),
     ]);
+    // معمل الاول
     User::create([
-      'full_name' => 'محمد ياسين',
+      'full_name' => 'معمل العامرية',
       'user_name' => 'admin2@admin',
       'user_type' => 1,
       'password' => bcrypt('admin@1234'),
     ]);
+    // معمل الثاني
     User::create([
-      'full_name' => 'محمد كرار',
+      'full_name' => 'معمل الفروسية',
       'user_name' => 'admin3@admin',
-      'user_type' => 1,
+      'user_type' => 2,
       'password' => bcrypt('admin@12346'),
     ]);
+    // محاسب
     User::create([
-      'full_name' => 'يوسف عبد الستار',
+      'full_name' => 'الحسابات',
       'user_name' => 'admin4@admin',
-      'user_type' => 2,
+      'user_type' => 3,
       'password' => bcrypt('admin12345'),
     ]);
   }

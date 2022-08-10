@@ -20,6 +20,9 @@ class InvoicmentController extends Controller
         if (isset($_GET['query'])) {
             $invoicemnts->where(function ($q) {
                 $columns = Schema::getColumnListing('invoicemnts');
+                $q->whereHas("process", function ($query) {
+                    $query->where('place', 'LIKE', '%' . $_GET['query'] . '%')->orwhere('date', 'LIKE', '%' . $_GET['query'] . '%')->orwhere('name_representative', 'LIKE', '%' . $_GET['query'] . '%');
+                });
                 foreach ($columns as $column) {
                     $q->orWhere($column, 'LIKE', '%' . $_GET['query'] . '%');
                 }

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\CategorySales;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Js;
 
 class salesCategoryController extends Controller
 {
@@ -74,10 +75,14 @@ class salesCategoryController extends Controller
     public function getSale()
     {
         $saels = CategorySales::select("*");
-        // if (isset($_GET["proces_type"])) {
-        //     $saels = CategorySales::whereIn("proces_type", $_GET['proces_type']);
-        //     return $saels->get();
-        // }
+
+        if (isset($_GET["proces_type"])) {
+            // return $_GET['proces_type'][0];
+            // return gettype(json_decode($_GET['proces_type'][0]));
+            // http://127.0.0.1:8000/api/get_sale?proces_type[]=[1,2]  the endpoint 
+            $saels = CategorySales::whereIn("proces_type", json_decode($_GET['proces_type'][0]));
+            // return $saels->get();
+        }
         if (isset($_GET['query'])) {
             $saels->where(function ($q) {
                 $columns = Schema::getColumnListing('category_sales');
@@ -89,6 +94,11 @@ class salesCategoryController extends Controller
         if (isset($_GET['filter'])) {
             $filter = json_decode($_GET['filter']);
             $saels->where($filter->name, $filter->value);
+        }
+        if (isset($_GET['filter_date'])) {
+            if ($_GET["filter_date"] != "" || $_GET["filter_date"] != null) {
+                $saels->where('date', $_GET['filter_date']);
+            }
         }
         if (isset($_GET)) {
             foreach ($_GET as $key => $value) {
@@ -150,7 +160,7 @@ class salesCategoryController extends Controller
         }
 
         $auth = auth()->user();
-        if ($auth->user_type == 1 || $auth->user_type == 0) {
+        if ($auth->user_type == 1 || $auth->user_type == 0 || $auth->user_type == 2) {
             $sale_category = CategorySales::find($request["sale_category_id"]);
             $sale_category->update(['status' => 3]);
             return $this->send_response(200, 'تم الانتهاء من العمل', [], CategorySales::find($request["sale_category_id"]));
