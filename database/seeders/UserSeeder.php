@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     // مبيعات
     User::create([
       'full_name' => 'مبيعات',
-      'user_name' => 'admin@admin1',
+      'user_name' => 'admin1@admin',
       'user_type' => 0,
       'password' => bcrypt('admin1234'),
     ]);
@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
       'full_name' => 'معمل الفروسية',
       'user_name' => 'admin3@admin',
       'user_type' => 2,
-      'password' => bcrypt('admin@12346'),
+      'password' => bcrypt('admin@123456'),
     ]);
     // محاسب
     User::create([
