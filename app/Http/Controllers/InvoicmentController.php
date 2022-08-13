@@ -21,7 +21,7 @@ class InvoicmentController extends Controller
             $invoicemnts->where(function ($q) {
                 $columns = Schema::getColumnListing('invoicemnts');
                 $q->whereHas("process", function ($query) {
-                    $query->where('place', 'LIKE', '%' . $_GET['query'] . '%')->orwhere('date', 'LIKE', '%' . $_GET['query'] . '%')->orwhere('name_representative', 'LIKE', '%' . $_GET['query'] . '%');
+                    $query->where('place', 'LIKE', '%' . $_GET['query'] . '%')->orwhere('date', 'LIKE', '%' . $_GET['query'] . '%')->orwhere('name_representative', 'LIKE', '%' . $_GET['query'] . '%')->orwhere('name_customer', 'LIKE', '%' . $_GET['query'] . '%');
                 });
                 foreach ($columns as $column) {
                     $q->orWhere($column, 'LIKE', '%' . $_GET['query'] . '%');
