@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountingController;
 use App\Http\Controllers\InvoicmentController;
 use App\Http\Controllers\ProcessingController;
 use App\Http\Controllers\salesCategoryController;
@@ -35,10 +36,14 @@ route::middleware("auth:api")->group(function () {
         route::delete("delete_sale_category", [salesCategoryController::class, 'deleteSaleCategory']);
     });
 
-    route::middleware('processingAndAccountingAdmin')->group(function () {
+    route::middleware('processing')->group(function () {
         route::get("get_invoicemnts", [InvoicmentController::class, 'getInvoicemnt']);
         route::post("add_to_done", [ProcessingController::class, 'addToDone']);
         route::post("add_invoicement", [InvoicmentController::class, 'addInvoicemnt']);
         route::put("done_invoice", [salesCategoryController::class, 'doneInvoice']);
+    });
+    route::middleware('AccountingAdmin')->group(function () {
+        route::get("get_representatives", [AccountingController::class, 'getRepresentatives']);
+        route::post("add_representative", [AccountingController::class, 'addRepresentative']);
     });
 });

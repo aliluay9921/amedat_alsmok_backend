@@ -6,7 +6,7 @@ use App\Traits\SendResponse;
 use Closure;
 use Illuminate\Http\Request;
 
-class ProcessingAndAccountingManageMiddleware
+class Processing
 {
     use SendResponse;
     /**
