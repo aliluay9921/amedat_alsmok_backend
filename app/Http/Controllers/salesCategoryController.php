@@ -27,7 +27,7 @@ class salesCategoryController extends Controller
             'bump' => 'required',
             'time' => 'required',
             'date' => 'required',
-            'name_representative' => 'required',
+            'representative_id' => 'required',
             'phone_number' => 'required',
             'price' => 'required',
 
@@ -42,7 +42,7 @@ class salesCategoryController extends Controller
             'time.required' => 'يرجى ادخال الحقل ',
             'date.required' => 'يرجى ادخال الحقل ',
             'phone_number.required' => 'يرجى ادخال الحقل ',
-            'name_representative.required' => 'يرجى ادخال الحقل ',
+            'representative_id.required' => 'يرجى ادخال الحقل ',
             'price.required' => 'يرجى ادخال الحقل ',
         ]);
         if ($validator->fails()) {
@@ -62,7 +62,7 @@ class salesCategoryController extends Controller
             'bump' => $request['bump'],
             'time' => $request['time'],
             'date' => $request['date'],
-            'name_representative' => $request['name_representative'],
+            'representative_id' => $request['representative_id'],
             'phone_number' => $request['phone_number'],
             'price' => $request['price'],
             'notes' => $request['notes'] ?? null,
@@ -85,6 +85,9 @@ class salesCategoryController extends Controller
         }
         if (isset($_GET['query'])) {
             $saels->where(function ($q) {
+                $q->whereHas('representativ', function ($q) {
+                    $q->orWhere('full_name', 'LIKE', '%' . $_GET['query'] . '%');
+                });
                 $columns = Schema::getColumnListing('category_sales');
                 foreach ($columns as $column) {
                     $q->orWhere($column, 'LIKE', '%' . $_GET['query'] . '%');
@@ -182,7 +185,7 @@ class salesCategoryController extends Controller
             'bump' => 'required',
             'time' => 'required',
             'date' => 'required',
-            'name_representative' => 'required',
+            'representative_id' => 'required',
             'phone_number' => 'required',
             'price' => 'required',
         ], [
@@ -198,7 +201,7 @@ class salesCategoryController extends Controller
             'time.required' => 'يرجى ادخال الحقل ',
             'date.required' => 'يرجى ادخال الحقل ',
             'phone_number.required' => 'يرجى ادخال الحقل ',
-            'name_representative.required' => 'يرجى ادخال الحقل ',
+            'representative_id.required' => 'يرجى ادخال الحقل ',
             'price.required' => 'يرجى ادخال الحقل ',
         ]);
         if ($validator->fails()) {
@@ -217,7 +220,7 @@ class salesCategoryController extends Controller
             'bump' => $request['bump'],
             'time' => $request['time'],
             'date' => $request['date'],
-            'name_representative' => $request['name_representative'],
+            'representative_id' => $request['representative_id'],
             'phone_number' => $request['phone_number'],
             'price' => $request['price'],
             'notes' => $request['notes'] ?? null,

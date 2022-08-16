@@ -11,7 +11,7 @@ class CategorySales extends Model
     use HasFactory, Uuids;
 
     protected $guarded = [];
-    protected $with = ["employee"];
+    protected $with = ["employee", "representativ"];
 
     // public function processing()
     // {
@@ -25,6 +25,10 @@ class CategorySales extends Model
     public function employee()
     {
         return $this->belongsTo(User::class, 'employee_id');
+    }
+    public function representativ()
+    {
+        return $this->belongsTo(User::class, 'representative_id');
     }
 
     public function invoicements()

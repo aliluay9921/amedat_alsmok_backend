@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('bump');
             $table->string('time');
             $table->date('date');
-            $table->string('name_representative');
+            $table->uuid('representative_id');
             $table->string('phone_number');
             $table->double('price');
             $table->double('actual_quantity')->default(0);
