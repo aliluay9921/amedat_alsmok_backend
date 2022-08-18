@@ -18,7 +18,7 @@ class SalesCategoryManageMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->user_type == 0) {
+        if (auth()->user()->user_type == 0 || auth()->user()->user_type == 4) {
             return $next($request);
         } else {
             return $this->send_response(402, 'غير مصرح لك بالدخول', [], []);

@@ -27,7 +27,6 @@ class salesCategoryController extends Controller
             'bump' => 'required',
             'time' => 'required',
             'date' => 'required',
-            'representative_id' => 'required',
             'phone_number' => 'required',
             'price' => 'required',
 
@@ -42,12 +41,12 @@ class salesCategoryController extends Controller
             'time.required' => 'يرجى ادخال الحقل ',
             'date.required' => 'يرجى ادخال الحقل ',
             'phone_number.required' => 'يرجى ادخال الحقل ',
-            'representative_id.required' => 'يرجى ادخال الحقل ',
             'price.required' => 'يرجى ادخال الحقل ',
         ]);
         if ($validator->fails()) {
             return $this->send_response(400, 'حصل خطأ في ادخال البيانات', $validator->errors(), []);
         }
+        $user = auth()->user()->id;
         $data = [];
         $data = [
             "employee_id" => auth()->user()->id,
@@ -55,38 +54,61 @@ class salesCategoryController extends Controller
             'name_customer' => $request['name_customer'],
             'type' => $request['type'],
             'degree' => $request['degree'],
-
             'quantity' => $request['quantity'],
             'man_buliding' => $request['man_buliding'],
             'workers' => $request['workers'],
             'bump' => $request['bump'],
             'time' => $request['time'],
             'date' => $request['date'],
-            'representative_id' => $request['representative_id'],
+            'representative_id' => $request['representative_id'] ?? $user, // if user type == 0 add request['representive_id'] else if user_type == 4 add  $user
             'phone_number' => $request['phone_number'],
             'price' => $request['price'],
             'notes' => $request['notes'] ?? null,
         ];
+        // $check_bump =  CategorySales::where("bump", $data['bump'])->where('date', $data['date'])->where('time', $data['time'])->first();
+        // $check_bump =  CategorySales::where([
+        //     "bump" => $data['bump'],
+        //     'date' => $data['date'],
+        //     'time' => $data['time']
+        // ])->first();
+        // return $data['time'];
+        // $expload = explode("-", $request['time']);
+        // $time_plus = $expload[1] - 1 . '-' . $expload[0];
+        // return $time_plus;
 
+
+
+        $check_bump =  CategorySales::where(function ($q) use ($request) {
+            $q->where("bump", $request['bump'])->where('date', $request['date'])->where('time', $request['time']);
+        })->get();
+
+        // ->where('time', $expload[1] + 1 . '-' . $expload[0])
+        // return $check_bump;
+        if ($check_bump->count() > 0) {
+            return $this->send_response(400, 'لايوجد وقت كافي لأستخدام هذا البمب', [], []);
+        }
         $sales = CategorySales::create($data);
         return $this->send_response(200, 'تم اضافة مبيعات بنجاح', [], CategorySales::find($sales->id));
     }
 
     public function getSale()
     {
-        $saels = CategorySales::select("*");
+        if (auth()->user()->user_type == 4) {
+            error_log(auth()->user()->id);
+            $saels = CategorySales::where('representative_id', auth()->user()->id);
+        } else {
+            $saels = CategorySales::select("*");
+            if (isset($_GET["proces_type"])) {
 
-        if (isset($_GET["proces_type"])) {
-            // return $_GET['proces_type'][0];
-            // return gettype(json_decode($_GET['proces_type'][0]));
-            // http://127.0.0.1:8000/api/get_sale?proces_type[]=[1,2]  the endpoint 
-            $saels = CategorySales::whereIn("proces_type", json_decode($_GET['proces_type'][0]));
-            // return $saels->get();
+                $saels = CategorySales::whereIn("proces_type", json_decode($_GET['proces_type'][0]));
+                // return $saels->get();
+            }
         }
+
         if (isset($_GET['query'])) {
             $saels->where(function ($q) {
                 $q->whereHas('representativ', function ($q) {
-                    $q->orWhere('full_name', 'LIKE', '%' . $_GET['query'] . '%');
+                    $q->Where('full_name', 'LIKE', '%' . $_GET['query'] . '%');
                 });
                 $columns = Schema::getColumnListing('category_sales');
                 foreach ($columns as $column) {

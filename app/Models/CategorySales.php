@@ -28,7 +28,7 @@ class CategorySales extends Model
     }
     public function representativ()
     {
-        return $this->belongsTo(User::class, 'representative_id');
+        return $this->belongsTo(User::class, 'representative_id')->withTrashed();
     }
 
     public function invoicements()
