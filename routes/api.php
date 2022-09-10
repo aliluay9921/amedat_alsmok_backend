@@ -29,6 +29,8 @@ route::middleware("auth:api")->group(function () {
 
     route::get("get_sale", [salesCategoryController::class, 'getSale']);
     route::get("get_representatives", [AccountingController::class, 'getRepresentatives']);
+    route::get("get_drivers", [AccountingController::class, "getDrivers"]);
+    route::get("get_cars", [AccountingController::class, "getCars"]);
 
     route::middleware('saleCategoryAdmin')->group(function () {
         route::post("add_sale", [salesCategoryController::class, 'addSale']);
@@ -45,6 +47,8 @@ route::middleware("auth:api")->group(function () {
     });
     route::middleware('AccountingAdmin')->group(function () {
         route::post("add_representative", [AccountingController::class, 'addRepresentative']);
+        route::post("add_driver", [AccountingController::class, 'addDriver']);
+        route::post("add_car", [AccountingController::class, "addCar"]);
         route::post("show_password", [AccountingController::class, 'showPassword']);
         route::put("update_represenivet", [AccountingController::class, 'updateRepresentive']);
         route::delete("delete_representive", [AccountingController::class, 'deleteRepresentive']);

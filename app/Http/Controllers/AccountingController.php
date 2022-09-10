@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Car;
+use App\Models\Driver;
 use App\Models\User;
 use App\Models\UserInfo;
 use App\Traits\Pagination;
@@ -47,6 +49,65 @@ class AccountingController extends Controller
             $_GET['limit'] = 10;
         $res = $this->paging($users->orderBy("created_at", "desc"),  $_GET['skip'],  $_GET['limit']);
         return $this->send_response(200, 'تم جلب المندوبين بنجاح', [], $res["model"], null, $res["count"]);
+    }
+
+    public function getDrivers()
+    {
+        $drivers = Driver::select("*");
+        if (isset($_GET['query'])) {
+            $drivers->where(function ($q) {
+                $columns = Schema::getColumnListing('drivers');
+                foreach ($columns as $column) {
+                    $q->orWhere($column, 'LIKE', '%' . $_GET['query'] . '%');
+                }
+            });
+        }
+
+        if (isset($_GET)) {
+            foreach ($_GET as $key => $value) {
+                if ($key == 'skip' || $key == 'limit' || $key == 'query') {
+                    continue;
+                } else {
+                    $sort = $value == 'true' ? 'desc' : 'asc';
+                    $drivers->orderBy($key,  $sort);
+                }
+            }
+        }
+        if (!isset($_GET['skip']))
+            $_GET['skip'] = 0;
+        if (!isset($_GET['limit']))
+            $_GET['limit'] = 10;
+        $res = $this->paging($drivers->orderBy("created_at", "desc"),  $_GET['skip'],  $_GET['limit']);
+        return $this->send_response(200, 'تم جلب السواق بنجاح', [], $res["model"], null, $res["count"]);
+    }
+    public function getCars()
+    {
+        $cars = Car::select("*");
+        if (isset($_GET['query'])) {
+            $cars->where(function ($q) {
+                $columns = Schema::getColumnListing('cars');
+                foreach ($columns as $column) {
+                    $q->orWhere($column, 'LIKE', '%' . $_GET['query'] . '%');
+                }
+            });
+        }
+
+        if (isset($_GET)) {
+            foreach ($_GET as $key => $value) {
+                if ($key == 'skip' || $key == 'limit' || $key == 'query') {
+                    continue;
+                } else {
+                    $sort = $value == 'true' ? 'desc' : 'asc';
+                    $cars->orderBy($key,  $sort);
+                }
+            }
+        }
+        if (!isset($_GET['skip']))
+            $_GET['skip'] = 0;
+        if (!isset($_GET['limit']))
+            $_GET['limit'] = 10;
+        $res = $this->paging($cars->orderBy("created_at", "desc"),  $_GET['skip'],  $_GET['limit']);
+        return $this->send_response(200, 'تم جلب السيارات بنجاح', [], $res["model"], null, $res["count"]);
     }
 
     public function addRepresentative(Request $request)
@@ -132,5 +193,49 @@ class AccountingController extends Controller
         $request = $request->json()->all();
         $get = UserInfo::where('user_id', $request['user_id'])->get();
         return $this->send_response(200, 'عرض كلمة المرور بنجاح', [], $get);
+    }
+
+    public function addDriver(Request $request)
+    {
+        $request = $request->json()->all();
+        $validator = Validator::make($request, [
+            'full_name' => 'required',
+        ], [
+            'full_name.required' => 'يجب ادخال اسم سائق',
+        ]);
+        if ($validator->fails()) {
+            return $this->send_response(400, 'حصل خطأ في ادخال البيانات', $validator->errors(), []);
+        }
+        $data = [];
+        $data = [
+            "full_name" => $request["full_name"],
+        ];
+        $driver = Driver::create($data);
+        return $this->send_response(200, 'تم اضافة سائق  بنجاح', [], Driver::find($driver->id));
+    }
+
+    public function addCar(Request $request)
+    {
+
+        $request = $request->json()->all();
+        $validator = Validator::make($request, [
+            'car_number' => 'required|unique:cars,car_number',
+            'car_sequence' => 'required|unique:cars,car_sequence',
+        ], [
+            'car_number.required' => 'يجب أدخال رقم السيارة',
+            'car_number.unique' => 'رقم السيارة الذي قمت بأدخاله مخزن سابقاً',
+            'car_sequence.required' => 'يجب أدخال تسلسل السيارة',
+            'car_sequence.unique' => 'تسلسل السيارة الذي قمت بأدخاله مخزن سابقاً',
+        ]);
+        if ($validator->fails()) {
+            return $this->send_response(400, 'حصل خطأ في ادخال البيانات', $validator->errors(), []);
+        }
+        $data = [];
+        $data = [
+            "car_number" => $request["car_number"],
+            "car_sequence" => $request["car_sequence"],
+        ];
+        $car = Car::create($data);
+        return $this->send_response(200, 'تم اضافة سيارة  بنجاح', [], Car::find($car->id));
     }
 }
