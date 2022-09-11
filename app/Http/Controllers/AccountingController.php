@@ -238,4 +238,21 @@ class AccountingController extends Controller
         $car = Car::create($data);
         return $this->send_response(200, 'تم اضافة سيارة  بنجاح', [], Car::find($car->id));
     }
+
+    public function deleteDriver(Request $request)
+    {
+        $request = $request->json()->all();
+        $validator = Validator::make($request, [
+            'driver_id' => 'required|exists:drivers,id'
+        ], [
+            'driver_id.required' => 'يجب ادخال  العنصر المراد حذفه',
+            'driver_id.exists' => 'العنصر الذي قمت بأدخاله غير موجود',
+        ]);
+        if ($validator->fails()) {
+            return $this->send_response(401, 'خطأ بالمدخلات', $validator->errors(), []);
+        }
+        $driver = Driver::find($request['driver_id']);
+        $driver->delete();
+        return $this->send_response(200, 'تم حذف السائق بنجاح', [], []);
+    }
 }
