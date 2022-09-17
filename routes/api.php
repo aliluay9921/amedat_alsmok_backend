@@ -53,5 +53,6 @@ route::middleware("auth:api")->group(function () {
         route::put("update_represenivet", [AccountingController::class, 'updateRepresentive']);
         route::delete("delete_driver", [AccountingController::class, "deleteDriver"]);
         route::delete("delete_representive", [AccountingController::class, 'deleteRepresentive']);
+        route::delete("delete_car", [AccountingController::class, "deleteCar"]);
     });
 });
