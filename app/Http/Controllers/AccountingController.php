@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use App\Models\CategorySales;
 use App\Models\Driver;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -271,5 +272,22 @@ class AccountingController extends Controller
         $car = Car::find($request['car_id']);
         $car->delete();
         return $this->send_response(200, 'تم حذف السيارة بنجاح', [], []);
+    }
+
+    public function makePaid(Request $request)
+    {
+        $request = $request->json()->all();
+        $validator = Validator::make($request, [
+            'sale_category_id' => 'required|exists:category_sales,id',
+        ], [
+            'sale_category_id.required' => 'يجب اختيار الصبة المراد تسديدها',
+            'sale_category_id.exists' => 'الصبة التي قمت بأختيارها غير متوفرة'
+        ]);
+        if ($validator->fails()) {
+            return $this->send_response(401, 'خطأ بالمدخلات', $validator->errors(), []);
+        }
+        $sale_category = CategorySales::find($request["sale_category_id"]);
+        $sale_category->update(["paid" => true]);
+        return $this->send_response(200, 'تم تسديد الصبة بنجاح', [], CategorySales::find($request["sale_category_id"]));
     }
 }

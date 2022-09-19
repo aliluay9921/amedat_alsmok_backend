@@ -159,7 +159,7 @@ class salesCategoryController extends Controller
         }
 
         $auth = auth()->user();
-        if ($auth->user_type == 1 || $auth->user_type == 0) {
+        if ($auth->user_type == 1 || $auth->user_type == 0 || $auth->user_type == 6) {
             $sale_category = CategorySales::find($request["sale_category_id"]);
             $sale_category->update([
                 'status' => 1,
@@ -187,7 +187,7 @@ class salesCategoryController extends Controller
         $auth = auth()->user();
         if ($auth->user_type == 1 || $auth->user_type == 0 || $auth->user_type == 2) {
             $sale_category = CategorySales::find($request["sale_category_id"]);
-            $sale_category->update(['status' => 3]);
+            $sale_category->update(['status' => 3]); //معناها الصبة تم  تنفيذها
             return $this->send_response(200, 'تم الانتهاء من العمل', [], CategorySales::find($request["sale_category_id"]));
         } else {
             return $this->send_response(400, 'لاتمتلك الصلاحية للترحيل الى المعمل', [], []);

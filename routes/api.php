@@ -50,6 +50,8 @@ route::middleware("auth:api")->group(function () {
         route::post("add_driver", [AccountingController::class, 'addDriver']);
         route::post("add_car", [AccountingController::class, "addCar"]);
         route::post("show_password", [AccountingController::class, 'showPassword']);
+        route::put("make_paid", [AccountingController::class, 'makePaid']);
+
         route::put("update_represenivet", [AccountingController::class, 'updateRepresentive']);
         route::delete("delete_driver", [AccountingController::class, "deleteDriver"]);
         route::delete("delete_representive", [AccountingController::class, 'deleteRepresentive']);
