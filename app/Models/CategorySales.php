@@ -12,6 +12,8 @@ class CategorySales extends Model
 
     protected $guarded = [];
     protected $with = ["employee", "representativ"];
+    protected $appends  = ["SequenceInvoicment"];
+
 
     // public function processing()
     // {
@@ -34,5 +36,10 @@ class CategorySales extends Model
     public function invoicements()
     {
         return $this->hasMany(Invoicemnt::class, 'sale_category_id');
+    }
+
+    public function getSequenceInvoicmentAttribute()
+    {
+        return Invoicemnt::where("sale_category_id", $this->id)->count();
     }
 }
