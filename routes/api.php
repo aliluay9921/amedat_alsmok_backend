@@ -36,6 +36,8 @@ route::middleware("auth:api")->group(function () {
         route::post("add_sale", [salesCategoryController::class, 'addSale']);
         route::put("update_sale_category", [salesCategoryController::class, 'updateSaleCategory']);
         route::put("sending_to_processing", [salesCategoryController::class, 'sendingToProcessing']);
+        route::put("go_bump", [salesCategoryController::class, 'goBump']);
+        route::put("add_note", [salesCategoryController::class, 'addNote']);
         route::delete("delete_sale_category", [salesCategoryController::class, 'deleteSaleCategory']);
     });
 

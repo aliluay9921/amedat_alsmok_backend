@@ -138,7 +138,7 @@ class salesCategoryController extends Controller
         if (!isset($_GET['skip']))
             $_GET['skip'] = 0;
         if (!isset($_GET['limit']))
-            $_GET['limit'] = 10;
+            $_GET['limit'] = 50;
         $res = $this->paging($saels->orderBy("status", "ASC"),  $_GET['skip'],  $_GET['limit']);
         return $this->send_response(200, 'تم جلب المبيعات بنجاح', [], $res["model"], null, $res["count"]);
     }
@@ -272,5 +272,46 @@ class salesCategoryController extends Controller
         }
         $sale_category->delete();
         return $this->send_response(200, 'تم حذف العنصر', [], []);
+    }
+
+    public function goBump(Request $request)
+    {
+        $request = $request->json()->all();
+        $validator = Validator::make($request, [
+            'sale_category_id' => 'required|exists:category_sales,id'
+        ], [
+            'sale_category_id.required' => 'يجب ادخال  العنصر المراد ترحيل البم اليه',
+            'sale_category_id.exists' => 'العنصر الذي قمت بأدخاله غير موجود',
+        ]);
+        if ($validator->fails()) {
+            return $this->send_response(401, 'خطأ بالمدخلات', $validator->errors(), []);
+        }
+
+        $sale_category = CategorySales::find($request['sale_category_id']);
+        $sale_category->update([
+            'go_bump' => true
+        ]);
+        return $this->send_response(200, 'تم ترحيل البم بنجاح', [], CategorySales::find($request['sale_category_id']));
+    }
+
+    public function addNote(Request $request)
+    {
+        $request = $request->json()->all();
+        $validator = Validator::make($request, [
+            'sale_category_id' => 'required|exists:category_sales,id',
+            'notes' => 'required'
+        ], [
+            'sale_category_id.required' => 'يجب ادخال  العنصر المراد أضافة ملاحضة اليه',
+            'sale_category_id.exists' => 'العنصر الذي قمت بأدخاله غير موجود',
+            'note.required' => 'يجب أدخال الملاحضة'
+        ]);
+        if ($validator->fails()) {
+            return $this->send_response(401, 'خطأ بالمدخلات', $validator->errors(), []);
+        }
+        $sale_category = CategorySales::find($request['sale_category_id']);
+        $sale_category->update([
+            'notes' => $sale_category->notes . "  " . $request['notes']
+        ]);
+        return $this->send_response(200, 'تم أضافة ملاحضة بنجاح', [], CategorySales::find($request['sale_category_id']));
     }
 }
