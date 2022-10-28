@@ -99,7 +99,6 @@ class salesCategoryController extends Controller
         } else {
             $saels = CategorySales::select("*");
             if (isset($_GET["proces_type"])) {
-
                 $saels = CategorySales::whereIn("proces_type", json_decode($_GET['proces_type'][0]));
                 // return $saels->get();
             }
@@ -143,6 +142,51 @@ class salesCategoryController extends Controller
         return $this->send_response(200, 'تم جلب المبيعات بنجاح', [], $res["model"], null, $res["count"]);
     }
 
+    public function getSalesToRepresentatives()
+    {
+        $saels = CategorySales::select("*")->where('representative_id', "!=", auth()->user()->id);
+        if (isset($_GET["proces_type"])) {
+            $saels = CategorySales::whereIn("proces_type", json_decode($_GET['proces_type'][0]));
+            // return $saels->get();
+        }
+        // 6ba2cc16-33a0-413a-a146-5f49cbbd1415
+        if (isset($_GET['query'])) {
+            $saels->where(function ($q) {
+                $q->whereHas('representativ', function ($q) {
+                    $q->Where('full_name', 'LIKE', '%' . $_GET['query'] . '%');
+                });
+                $columns = Schema::getColumnListing('category_sales');
+                foreach ($columns as $column) {
+                    $q->orWhere($column, 'LIKE', '%' . $_GET['query'] . '%');
+                }
+            });
+        }
+        if (isset($_GET['filter'])) {
+            $filter = json_decode($_GET['filter']);
+            $saels->where($filter->name, $filter->value);
+        }
+        if (isset($_GET['filter_date'])) {
+            if ($_GET["filter_date"] != "" || $_GET["filter_date"] != null) {
+                $saels->where('date', $_GET['filter_date']);
+            }
+        }
+        if (isset($_GET)) {
+            foreach ($_GET as $key => $value) {
+                if ($key == 'skip' || $key == 'limit' || $key == 'query' || $key = 'filter') {
+                    continue;
+                } else {
+                    $sort = $value == 'true' ? 'desc' : 'asc';
+                    $saels->orderBy($key,  $sort);
+                }
+            }
+        }
+        if (!isset($_GET['skip']))
+            $_GET['skip'] = 0;
+        if (!isset($_GET['limit']))
+            $_GET['limit'] = 50;
+        $res = $this->paging($saels->orderBy("status", "ASC"),  $_GET['skip'],  $_GET['limit']);
+        return $this->send_response(200, 'تم جلب المبيعات بنجاح', [], $res["model"], null, $res["count"]);
+    }
 
 
     public function sendingToProcessing(Request $request)

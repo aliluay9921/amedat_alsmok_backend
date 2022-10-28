@@ -28,6 +28,7 @@ route::post("login", [UserController::class, "login"]);
 route::middleware("auth:api")->group(function () {
 
     route::get("get_sale", [salesCategoryController::class, 'getSale']);
+    route::get("get_sales_to_representatives", [salesCategoryController::class, 'getSalesToRepresentatives']);
     route::get("get_representatives", [AccountingController::class, 'getRepresentatives']);
     route::get("get_drivers", [AccountingController::class, "getDrivers"]);
     route::get("get_cars", [AccountingController::class, "getCars"]);
