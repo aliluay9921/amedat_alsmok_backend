@@ -29,6 +29,8 @@ class salesCategoryController extends Controller
             'date' => 'required',
             'phone_number' => 'required',
             'price' => 'required',
+            'representative_id' => auth()->user()->user_type == 0 ? 'required' : ''
+
         ], [
             'place.required' => 'يرجى ادخال الحقل ',
             'name_customer.required' => 'يرجى ادخال الحقل ',
@@ -41,7 +43,7 @@ class salesCategoryController extends Controller
             'date.required' => 'يرجى ادخال الحقل ',
             'phone_number.required' => 'يرجى ادخال الحقل ',
             'price.required' => 'يرجى ادخال الحقل ',
-            'representative_id' => auth()->user()->user_type == 0 ? 'required' : ''
+            'representative_id.required' => 'يجب اختيار المندوب '
         ]);
         if ($validator->fails()) {
             return $this->send_response(400, 'حصل خطأ في ادخال البيانات', $validator->errors(), []);
