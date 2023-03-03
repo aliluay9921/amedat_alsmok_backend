@@ -86,6 +86,11 @@ class InvoicmentController extends Controller
             'invoice_no' => $request['invoice_no'],
             'sequence' => $request['sequence'],
         ];
+        $get_current_sale=Invoicemnt::where("sale_category_id",$request["sale_category_id"])->where("sequence",$request["sequence"])->first();
+        if($get_current_sale){
+            return $this->send_response(400, 'تم تكرار رقم التسلسل الرجا اعادة الفاتورة مرة اخرى ', [], []);
+
+        }
         $sale_category->update(['actual_quantity' => $sale_category->actual_quantity + $request['quantity_car']]);
         $add_invoice = Invoicemnt::create($data);
 
