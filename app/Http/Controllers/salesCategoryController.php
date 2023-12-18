@@ -66,6 +66,8 @@ class salesCategoryController extends Controller
             'phone_number' => $request['phone_number'],
             'price' => $request['price'],
             'notes' => $request['notes'] ?? null,
+            'Type_pouring' => $request['Type_pouring'] ?? null,
+            'workers_group' => $request['workers_group'] ?? null,
         ];
         // $check_bump =  CategorySales::where("bump", $data['bump'])->where('date', $data['date'])->where('time', $data['time'])->first();
         // $check_bump =  CategorySales::where([
@@ -296,6 +298,8 @@ class salesCategoryController extends Controller
             'phone_number' => $request['phone_number'],
             'price' => $request['price'],
             'notes' => $request['notes'] ?? null,
+            'Type_pouring' => $request['Type_pouring'] ?? null,
+            'workers_group' => $request['workers_group'] ?? null,
         ];
         $sale_category = CategorySales::find($request['sale_category_id']);
         if ($sale_category->status != 0) {
