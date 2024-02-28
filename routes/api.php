@@ -41,6 +41,7 @@ route::middleware("auth:api")->group(function () {
         route::put("go_bump", [salesCategoryController::class, 'goBump']);
         route::put("add_note", [salesCategoryController::class, 'addNote']);
         route::delete("delete_sale_category", [salesCategoryController::class, 'deleteSaleCategory']);
+        route::delete("delete_manager_sale_category", [salesCategoryController::class, 'deleteManagerSaleCategory']); //حذف جديد يوسف 
     });
 
     route::middleware('processing')->group(function () {

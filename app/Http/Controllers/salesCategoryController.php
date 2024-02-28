@@ -6,6 +6,7 @@ use App\Traits\Pagination;
 use App\Traits\SendResponse;
 use Illuminate\Http\Request;
 use App\Models\CategorySales;
+use App\Models\Invoicemnt;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Js;
@@ -367,5 +368,25 @@ class salesCategoryController extends Controller
             'notes' => $sale_category->notes . "  " . $request['notes']
         ]);
         return $this->send_response(200, 'تم أضافة ملاحضة بنجاح', [], CategorySales::find($request['sale_category_id']));
+    }
+
+    public function deleteManagerSaleCategory(Request $request)
+    {
+        $request = $request->json()->all();
+        $validator = Validator::make($request, [
+            'sale_category_id' => 'required|exists:category_sales,id'
+        ], [
+            'sale_category_id.required' => 'يجب ادخال  العنصر المراد حذفه',
+            'sale_category_id.exists' => 'العنصر الذي قمت بأدخاله غير موجود',
+        ]);
+        if ($validator->fails()) {
+            return $this->send_response(401, 'خطأ بالمدخلات', $validator->errors(), []);
+        }
+        // $sale_category = CategorySales::find($request['sale_category_id']);
+        // $sale_category->delete();
+        $sale_category = CategorySales::find($request['sale_category_id']);
+        Invoicemnt::where("sale_category_id", $sale_category->id)->delete();
+        $sale_category->delete();
+        return $this->send_response(200, 'تم حذف العنصر', [], []);
     }
 }
