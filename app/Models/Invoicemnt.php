@@ -32,6 +32,8 @@ class Invoicemnt extends Model
 
         // return Invoicemnt::count();
 
-        return   DB::table('invoicemnts')->count();
+        // return   DB::table('invoicemnts')->count();
+        // 
+        return DB::table('invoicemnts')->latest('invoice_no')->first();
     }
 }
