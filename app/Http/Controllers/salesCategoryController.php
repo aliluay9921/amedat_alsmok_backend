@@ -69,6 +69,11 @@ class salesCategoryController extends Controller
             'notes' => $request['notes'] ?? null,
             'Type_pouring' => $request['Type_pouring'] ?? null,
             'workers_group' => $request['workers_group'] ?? null,
+            'status' => auth()->user()->user_type == 6 ? 3 : 0,
+            'proces_type' => auth()->user()->user_type == 6 ? 3 : 0,
+            'final_quantity' => auth()->user()->user_type == 6 ? $request['final_quantity'] : 0,
+            'actual_quantity' => auth()->user()->user_type == 6 ? $request['actual_quantity'] : 0,
+            'created_at' => auth()->user()->user_type == 6 ? $request['date'] : now()
         ];
         // $check_bump =  CategorySales::where("bump", $data['bump'])->where('date', $data['date'])->where('time', $data['time'])->first();
         // $check_bump =  CategorySales::where([
