@@ -15,46 +15,55 @@ class UserSeeder extends Seeder
   public function run()
   {
     // مبيعات
-    User::create([
-      'full_name' => 'مبيعات',
-      'user_name' => 'admin1@admin',
-      'user_type' => 0,
-      'password' => bcrypt('admin1234'),
-    ]);
+    // User::create([
+    //   'full_name' => 'مبيعات',
+    //   'user_name' => 'admin1@admin',
+    //   'user_type' => 0,
+    //   'password' => bcrypt('admin1234'),
+    // ]);
     // معمل الاول
-    User::create([
-      'full_name' => 'معمل العامرية',
-      'user_name' => 'admin2@admin',
-      'user_type' => 1,
-      'password' => bcrypt('admin@1234'),
-    ]);
+    // User::create([
+    //   'full_name' => 'معمل العامرية',
+    //   'user_name' => 'admin2@admin',
+    //   'user_type' => 1,
+    //   'password' => bcrypt('admin@1234'),
+    // ]);
     // معمل الثاني
-    User::create([
-      'full_name' => 'معمل الفروسية',
-      'user_name' => 'admin3@admin',
-      'user_type' => 2,
-      'password' => bcrypt('admin@123456'),
-    ]);
+    // User::create([
+    //   'full_name' => 'معمل الفروسية',
+    //   'user_name' => 'admin3@admin',
+    //   'user_type' => 2,
+    //   'password' => bcrypt('admin@123456'),
+    // ]);
     // محاسب
-    User::create([
-      'full_name' => 'الحسابات',
-      'user_name' => 'admin4@admin',
-      'user_type' => 3,
-      'password' => bcrypt('admin12345'),
-    ]);
+    // User::create([
+    //   'full_name' => 'الحسابات',
+    //   'user_name' => 'admin4@admin',
+    //   'user_type' => 3,
+    //   'password' => bcrypt('admin12345'),
+    // ]);
     // User::create([
     //   'full_name' => 'مهندسين',
     //   'user_name' => 'admin5@admin',
     //   'user_type' => 5,
     //   'password' => bcrypt('admin@12345'),
     // ]);
-    
+
     // User::create([
     //   'full_name' => 'الادارة',
     //   'user_name' => 'manager@admin',
     //   'user_type' => 6,
     //   'password' => bcrypt('manager1234'),
     // ]);
+
+
+
+    User::create([
+      'full_name' => 'معمل الفروسية2',
+      'user_name' => 'admin7@admin',
+      'user_type' => 7,
+      'password' => bcrypt('admin@1234567'),
+    ]);
   }
 }
 

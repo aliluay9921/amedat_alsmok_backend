@@ -240,7 +240,7 @@ class salesCategoryController extends Controller
         }
 
         $auth = auth()->user();
-        if ($auth->user_type == 1 || $auth->user_type == 0 || $auth->user_type == 2) {
+        if ($auth->user_type == 1 || $auth->user_type == 0 || $auth->user_type == 2 || $auth->user_type == 7) {
             $sale_category = CategorySales::find($request["sale_category_id"]);
             $sale_category->update([
                 'status' => 3,
