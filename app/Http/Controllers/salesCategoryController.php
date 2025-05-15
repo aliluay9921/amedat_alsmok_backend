@@ -193,7 +193,7 @@ class salesCategoryController extends Controller
         if (!isset($_GET['skip']))
             $_GET['skip'] = 0;
         if (!isset($_GET['limit']))
-            $_GET['limit'] = 50;
+            $_GET['limit'] = 100;
         $res = $this->paging($saels->orderBy("status", "ASC"),  $_GET['skip'],  $_GET['limit']);
         return $this->send_response(200, 'تم جلب المبيعات بنجاح', [], $res["model"], null, $res["count"]);
     }
@@ -240,7 +240,7 @@ class salesCategoryController extends Controller
         }
 
         $auth = auth()->user();
-        if ($auth->user_type == 1 || $auth->user_type == 0 || $auth->user_type == 2 || $auth->user_type == 7) {
+        if ($auth->user_type == 1 || $auth->user_type == 0 || $auth->user_type == 2 || $auth->user_type == 7 || $auth->user_type == 8) {
             $sale_category = CategorySales::find($request["sale_category_id"]);
             $sale_category->update([
                 'status' => 3,

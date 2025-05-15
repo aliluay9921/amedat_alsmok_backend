@@ -7,6 +7,7 @@ use App\Http\Controllers\salesCategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Models\Invoicemnt;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,8 @@ route::middleware("auth:api")->group(function () {
     route::get("get_drivers", [AccountingController::class, "getDrivers"]);
     route::get("get_cars", [AccountingController::class, "getCars"]);
     route::get("get_users", [AccountingController::class, "getUsers"]);
+    route::post("search_driver_invoicment", [InvoicmentController::class, 'searchDriverInvoicment']); //بحث عن سائق
+
 
     route::middleware('saleCategoryAdmin')->group(function () {
         route::post("add_sale", [salesCategoryController::class, 'addSale']);

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\CategorySales;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class InvoicmentController extends Controller
 {
@@ -49,9 +50,27 @@ class InvoicmentController extends Controller
         if (!isset($_GET['skip']))
             $_GET['skip'] = 0;
         if (!isset($_GET['limit']))
-            $_GET['limit'] = 50;
+            $_GET['limit'] = 100;
         $res = $this->paging($invoicemnts->orderBy("created_at", "desc"),  $_GET['skip'],  $_GET['limit']);
         return $this->send_response(200, 'تم جلب الفواتير بنجاح', [], $res["model"], null, $res["count"]);
+    }
+
+    public function searchDriverInvoicment(Request $request)
+    {
+        $request = $request->json()->all();
+        $validator = Validator::make($request, [
+            // to make invoice
+            'driver_name' => 'required|exists:drivers,full_name',
+            'start_time' => 'required',
+            'end_time' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->send_response(400, 'حصل خطأ في ادخال البيانات', $validator->errors(), []);
+        }
+        $start = Carbon::parse($request['start_time'])->startOfDay();
+        $end = Carbon::parse($request['end_time'])->endOfDay();
+        $invoicemnts = Invoicemnt::select("*")->where("driver_name", $request['driver_name'])->whereBetween("created_at", [$start, $end])->get();
+        return $this->send_response(200, ' عملية البحث تمت   بنجاح', [], $invoicemnts);
     }
     public function addInvoicemnt(Request $request)
     {
@@ -86,10 +105,9 @@ class InvoicmentController extends Controller
             'invoice_no' => $request['invoice_no'],
             'sequence' => $request['sequence'],
         ];
-        $get_current_sale=Invoicemnt::where("sale_category_id",$request["sale_category_id"])->where("sequence",$request["sequence"])->first();
-        if($get_current_sale){
+        $get_current_sale = Invoicemnt::where("sale_category_id", $request["sale_category_id"])->where("sequence", $request["sequence"])->first();
+        if ($get_current_sale) {
             return $this->send_response(400, 'تم تكرار رقم التسلسل الرجا اعادة الفاتورة مرة اخرى ', [], []);
-
         }
         $sale_category->update(['actual_quantity' => $sale_category->actual_quantity + $request['quantity_car']]);
         $add_invoice = Invoicemnt::create($data);

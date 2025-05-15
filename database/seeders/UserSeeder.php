@@ -56,17 +56,21 @@ class UserSeeder extends Seeder
     //   'password' => bcrypt('manager1234'),
     // ]);
 
-
+    // User::create([
+    //   'full_name' => 'معمل الفروسية2',
+    //   'user_name' => 'admin7@admin',
+    //   'user_type' => 7,
+    //   'password' => bcrypt('admin@1234567'),
+    // ]);
 
     User::create([
-      'full_name' => 'معمل الفروسية2',
-      'user_name' => 'admin7@admin',
-      'user_type' => 7,
-      'password' => bcrypt('admin@1234567'),
+      'full_name' => 'معمل عامرية2 - مطار',
+      'user_name' => 'admin8@admin',
+      'user_type' => 8,
+      'password' => bcrypt('admin@12345678'),
     ]);
   }
 }
-
 
 
 

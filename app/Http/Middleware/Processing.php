@@ -18,7 +18,7 @@ class Processing
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->user_type == 1 || auth()->user()->user_type == 2 || auth()->user()->user_type == 7) {
+        if (auth()->user()->user_type == 1 || auth()->user()->user_type == 2 || auth()->user()->user_type == 7 || auth()->user()->user_type == 8) {
             return $next($request);
         } else {
             return $this->send_response(402, 'غير مصرح لك بالدخول', [], []);
